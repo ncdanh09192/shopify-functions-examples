@@ -1,0 +1,32 @@
+query CartInput {
+  cart {
+    lines {
+      id
+      quantity
+      cost {
+        amountPerQuantity {
+          amount
+        }
+      }
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          product {
+            id
+            # hasAnyTag checks if product has the "bxgy-eligible" tag
+            hasAnyTag(tags: ["bxgy-eligible"])
+          }
+        }
+      }
+    }
+  }
+  discount {
+    discountClasses
+    # Config: { buyQty: number, getQty: number }
+    # Set via Shopify Admin metafield or App Bridge
+    metafield(namespace: "buy-x-get-y", key: "config") {
+      value
+    }
+  }
+}
