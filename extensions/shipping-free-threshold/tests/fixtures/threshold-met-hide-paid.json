@@ -5,11 +5,12 @@
     "input": {
       "cart": {
         "cost": {
-          "subtotalAmount": { "amount": "50.0", "currencyCode": "USD" }
+          "subtotalAmount": { "amount": "120.0", "currencyCode": "USD" }
         },
         "deliveryGroups": [
           {
             "deliveryOptions": [
+              { "handle": "free-shipping", "title": "Free Shipping", "cost": { "amount": "0.0" } },
               { "handle": "standard", "title": "Standard Shipping", "cost": { "amount": "9.99" } },
               { "handle": "express", "title": "Express Shipping", "cost": { "amount": "19.99" } }
             ]
@@ -21,7 +22,11 @@
       }
     },
     "output": {
-      "operations": []
+      "operations": [
+        { "deliveryOptionRename": { "deliveryOptionHandle": "free-shipping", "title": "🎉 Free Shipping" } },
+        { "deliveryOptionHide": { "deliveryOptionHandle": "standard" } },
+        { "deliveryOptionHide": { "deliveryOptionHandle": "express" } }
+      ]
     }
   }
 }

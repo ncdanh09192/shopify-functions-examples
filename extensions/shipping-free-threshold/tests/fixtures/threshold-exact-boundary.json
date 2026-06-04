@@ -1,0 +1,30 @@
+{
+  "payload": {
+    "export": "cart-delivery-options-transform-run",
+    "target": "cart.delivery-options.transform.run",
+    "input": {
+      "cart": {
+        "cost": {
+          "subtotalAmount": { "amount": "100.0", "currencyCode": "USD" }
+        },
+        "deliveryGroups": [
+          {
+            "deliveryOptions": [
+              { "handle": "free-shipping", "title": "Free Shipping", "cost": { "amount": "0.0" } },
+              { "handle": "standard", "title": "Standard Shipping", "cost": { "amount": "9.99" } }
+            ]
+          }
+        ]
+      },
+      "deliveryCustomization": {
+        "metafield": { "jsonValue": { "threshold": 100, "freeShippingTitle": "🎉 Free Shipping" } }
+      }
+    },
+    "output": {
+      "operations": [
+        { "deliveryOptionRename": { "deliveryOptionHandle": "free-shipping", "title": "🎉 Free Shipping" } },
+        { "deliveryOptionHide": { "deliveryOptionHandle": "standard" } }
+      ]
+    }
+  }
+}

@@ -1,5 +1,25 @@
 query CartDeliveryOptionsTransformRunInput {
+  cart {
+    cost {
+      # Pre-tax, pre-shipping subtotal — used as the basis for threshold comparison
+      subtotalAmount {
+        amount
+        currencyCode
+      }
+    }
+    deliveryGroups {
+      deliveryOptions {
+        handle
+        title
+        cost {
+          amount
+        }
+      }
+    }
+  }
   deliveryCustomization {
+    # Config shape: { threshold: number, freeShippingTitle: string }
+    # Example: { "threshold": 100, "freeShippingTitle": "Free Shipping" }
     metafield(namespace: "$app:shipping-free-threshold", key: "function-configuration") {
       jsonValue
     }
