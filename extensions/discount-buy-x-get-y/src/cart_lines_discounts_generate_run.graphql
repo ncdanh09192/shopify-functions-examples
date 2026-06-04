@@ -14,7 +14,7 @@ query CartInput {
           id
           product {
             id
-            # hasAnyTag checks if product has the "bxgy-eligible" tag
+            # Returns true if the product has the "bxgy-eligible" tag
             hasAnyTag(tags: ["bxgy-eligible"])
           }
         }
@@ -23,7 +23,7 @@ query CartInput {
   }
   discount {
     discountClasses
-    # Config: { buyQty: number, getQty: number }
+    # Config shape: { buyQty: number, getQty: number }
     # Set via Shopify Admin metafield or App Bridge
     metafield(namespace: "buy-x-get-y", key: "config") {
       value

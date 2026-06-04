@@ -1,13 +1,13 @@
 /**
  * Buy X Get Y — Shopify Discount Function
  *
- * Logic: Khi customer mua đủ X items có tag "bxgy-eligible",
- *        Y items rẻ nhất sẽ được miễn phí (100% discount).
+ * When a customer adds X items tagged "bxgy-eligible" to their cart,
+ * the Y cheapest eligible items are discounted 100% (free).
  *
  * Config metafield (namespace: "buy-x-get-y", key: "config"):
  *   { "buyQty": 3, "getQty": 1 }
  *
- * Cách set tag: Shopify Admin → Product → Tags → thêm "bxgy-eligible"
+ * How to tag products: Shopify Admin → Product → Tags → add "bxgy-eligible"
  */
 
 import {
@@ -29,25 +29,25 @@ export function cartLinesDiscountsGenerateRun(
 ): CartLinesDiscountsGenerateRunResult {
   const noDiscount: CartLinesDiscountsGenerateRunResult = { operations: [] };
 
-  // Chỉ chạy nếu discount có class Product
+  // Only run when the discount node has a Product discount class
   const hasProductDiscountClass = input.discount.discountClasses.includes(
     DiscountClass.Product,
   );
   if (!hasProductDiscountClass) return noDiscount;
 
-  // Đọc config từ metafield, fallback về default
+  // Read config from metafield, fall back to defaults if missing or invalid
   let config: Config = DEFAULT_CONFIG;
   try {
     if (input.discount.metafield?.value) {
       config = JSON.parse(input.discount.metafield.value) as Config;
     }
   } catch {
-    // metafield không parse được → dùng default
+    // Invalid JSON — use default config
   }
 
   const { buyQty, getQty } = config;
 
-  // Lọc eligible lines (có tag "bxgy-eligible" và là ProductVariant)
+  // Filter lines that are ProductVariants with the "bxgy-eligible" tag
   const eligibleLines = input.cart.lines.filter((line) => {
     if (line.merchandise.__typename !== 'ProductVariant') return false;
     return line.merchandise.product.hasAnyTag;
@@ -58,18 +58,18 @@ export function cartLinesDiscountsGenerateRun(
     0,
   );
 
-  // Cần đủ (buyQty + getQty) items mới kích hoạt discount
+  // Each BXGY set consumes (buyQty + getQty) items
   const freeSetCount = Math.floor(totalEligibleQty / (buyQty + getQty));
   if (freeSetCount === 0) return noDiscount;
 
-  // Sort by price ascending → free items rẻ nhất (standard BXGY behavior)
+  // Sort ascending by unit price — cheapest items get the free discount
   const sortedLines = [...eligibleLines].sort((a, b) => {
     const priceA = parseFloat(a.cost.amountPerQuantity.amount);
     const priceB = parseFloat(b.cost.amountPerQuantity.amount);
     return priceA - priceB;
   });
 
-  // Số items được free = freeSetCount * getQty
+  // Total free items = number of completed sets × getQty
   const freeItemCount = freeSetCount * getQty;
   const discountedLines = sortedLines.slice(0, freeItemCount);
 
