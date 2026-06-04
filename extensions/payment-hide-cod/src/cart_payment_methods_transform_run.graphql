@@ -1,0 +1,28 @@
+query CartPaymentMethodsTransformRunInput {
+  cart {
+    deliveryGroups {
+      # Shipping address entered by the customer at checkout
+      deliveryAddress {
+        countryCode
+      }
+    }
+    cost {
+      # Pre-tax subtotal — used for cart value condition
+      subtotalAmount {
+        amount
+      }
+    }
+  }
+  paymentCustomization {
+    # Config shape: { hiddenPaymentNames: string[], blockedCountries: string[], maxCartAmount: number | null }
+    # Example: { "hiddenPaymentNames": ["Cash on Delivery"], "blockedCountries": ["US", "CA"], "maxCartAmount": 500 }
+    metafield(namespace: "$app:payment-hide-cod", key: "function-configuration") {
+      value
+    }
+  }
+  # All available payment methods at checkout
+  paymentMethods {
+    id
+    name
+  }
+}

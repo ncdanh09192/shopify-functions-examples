@@ -1,0 +1,26 @@
+{
+  "payload": {
+    "export": "cart-payment-methods-transform-run",
+    "target": "cart.payment-methods.transform.run",
+    "input": {
+      "cart": {
+        "deliveryGroups": [
+          { "deliveryAddress": { "countryCode": "VN" } }
+        ],
+        "cost": { "subtotalAmount": { "amount": "50.0" } }
+      },
+      "paymentCustomization": {
+        "metafield": {
+          "value": "{\"hiddenPaymentNames\":[\"Cash on Delivery (COD)\"],\"blockedCountries\":[\"US\",\"CA\",\"GB\"],\"maxCartAmount\":500}"
+        }
+      },
+      "paymentMethods": [
+        { "id": "gid://shopify/PaymentCustomizationPaymentMethod/1", "name": "Cash on Delivery (COD)" },
+        { "id": "gid://shopify/PaymentCustomizationPaymentMethod/2", "name": "Credit Card" }
+      ]
+    },
+    "output": {
+      "operations": []
+    }
+  }
+}
